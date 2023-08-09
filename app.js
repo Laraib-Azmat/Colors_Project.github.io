@@ -86,7 +86,6 @@ function randomColor(){
 
             //color to the input sliders
             const sliders = div.querySelectorAll("input");
-            console.log(sliders);
        
             const hue = sliders[0];
             const brightness = sliders[1];
@@ -209,22 +208,25 @@ const librarybtn = document.querySelector(".library-button");
 const libraryPopup = document.querySelector(".library-popup");
 const libraryText = document.querySelector(".library-popup-text");
 const libraryClose = document.querySelector(".library-close");
+const libraryClear = document.querySelector(".library-clear");
+
 
 save.addEventListener("click", () => {
     savepopup.classList.toggle("active-save-popup");
     saveText.classList.toggle("active-save-popup-text");
 });
 
-saveClose.addEventListener("click", () => {
+saveClose.addEventListener("click", closeSave);
+function closeSave(){
     savepopup.classList.remove("active-save-popup");
     saveText.classList.remove("active-save-popup-text");
-});
+}
 
 saveGenrate.addEventListener("click", saveToLocal);
 
 //save to local storage
 
-function saveToLocal() {
+function saveToLocal(e) {
     const input = saveText.querySelector("input");
     const name = input.value;
     const colors = [];
@@ -233,8 +235,17 @@ function saveToLocal() {
     texts.forEach(text => {
         colors.push(text.innerText);
     });
-    let paletteNr = savePalette.length;
-    savePalette = { name, colors, nr: paletteNr };
+
+    let paletteNr;
+  const paletteObjects = JSON.parse(localStorage.getItem("localPalette"));
+  if (paletteObjects) {
+    paletteNr = paletteObjects.length;
+  } else {
+    paletteNr = 0;
+  }
+
+     savePalette = { name, colors, nr: paletteNr };
+
     
     savePaletteToLocalStorage(savePalette);
 
@@ -243,16 +254,52 @@ function saveToLocal() {
     //update library
 
     const div = document.createElement("div");
-    savePalette.colors.forEach(color => {
+    div.classList.add("library-color-div");
+    const title = document.createElement("h2");
+    title.classList.add("library-title");
+    title.innerText = savePalette.name;
+    const libraryColors = document.createElement("div");
+    libraryColors.classList.add("library-small-colors");
+
+savePalette.colors.forEach(color => { 
         const smallDiv = document.createElement("div");
-        smallDiv.classList.add(".library-color-divs");
+        smallDiv.classList.add("smallDiv");
         smallDiv.style.backgroundColor = color;
-        div.appendChild(smallDiv);
+        libraryColors.appendChild(smallDiv);
     });
-    libraryText.appendChild(div);
+   
+    const librarySet = document.createElement("button");
+    librarySet.classList.add("library-genrate");
+    librarySet.classList.add(savePalette.nr);
+    librarySet.innerText = "Select";
+    
+    libraryColors.appendChild(librarySet);
+    div.appendChild(title);
+    div.appendChild(libraryColors);
+    libraryPopup.children[0].appendChild(div);
+    closeSave();
+
+
+
+    librarySet.addEventListener("click", e => {
+      
+        const paletteIndex = e.target.classList[1];
+
+        const localPalette = JSON.parse(localStorage.getItem("localPalette"));
+
+        console.log();
+            initialColors = [];
+        localPalette[paletteIndex].colors.forEach((color, index) => {
+                initialColors.push(color);
+            colorDiv[index].style.backgroundColor = color;
+            UpdateText(index);
+        });
+        closeLibrary();
+    });
+   
 
 }
-function savePaletteToLocalStorage(savePalette){
+function savePaletteToLocalStorage(Palette){
     let palette;
 
     if (localStorage.getItem("localPalette") === null) {
@@ -260,7 +307,7 @@ function savePaletteToLocalStorage(savePalette){
     } else {
         palette = JSON.parse(localStorage.getItem("localPalette"));
     }
-    palette.push(savePalette);
+    palette.push(Palette);
     localStorage.setItem("localPalette", JSON.stringify(palette));
 
 }
@@ -270,10 +317,76 @@ librarybtn.addEventListener("click", () => {
     libraryText.classList.toggle("active-library-popup-text");
 });
 
-libraryClose.addEventListener("click", () => {
+libraryClose.addEventListener("click", closeLibrary);
+
+
+
+function closeLibrary() {
     libraryPopup.classList.remove("active-library-popup");
     libraryText.classList.remove("active-library-popup-text");
+}
+
+function updateLibrary() {
+    const palette = JSON.parse(localStorage.getItem("localPalette"));
+    const len = palette.length;
+    //making library
+    for (let i = 0; i < len; i++){
+
+        const div = document.createElement("div");
+        div.classList.add("library-color-div");
+        const title = document.createElement("h2");
+        title.classList.add("library-title");
+        title.innerText =  palette[i].name;
+        const libraryColors = document.createElement("div");
+        libraryColors.classList.add("library-small-colors");
+    
+    palette[i].colors.forEach(color => { 
+            const smallDiv = document.createElement("div");
+            smallDiv.classList.add("smallDiv");
+            smallDiv.style.backgroundColor = color;
+            libraryColors.appendChild(smallDiv);
+    });
+    const librarySet = document.createElement("button");
+    librarySet.classList.add("library-genrate");
+    librarySet.classList.add( palette[i].nr);
+    librarySet.innerText = "Select";
+    
+    libraryColors.appendChild(librarySet);
+    div.appendChild(title);
+    div.appendChild(libraryColors);
+    libraryPopup.children[0].appendChild(div);
+  
+
+        
+    librarySet.addEventListener("click", e => {
+      
+        const paletteIndex = e.target.classList[1];
+
+        const localPalette = JSON.parse(localStorage.getItem("localPalette"));
+
+        console.log();
+            initialColors = [];
+        localPalette[paletteIndex].colors.forEach((color, index) => {
+                initialColors.push(color);
+            colorDiv[index].style.backgroundColor = color;
+            UpdateText(index);
+        });
+        closeLibrary();
+        updateSlider();
+    });
+        
+    };
+
+}
+
+libraryClear.addEventListener("click", () => {
+    localStorage.clear(); 
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+    randomColor();
+    updateLibrary();
 });
 
 
-randomColor();
+

@@ -60,7 +60,7 @@ position: relative;
 cursor: pointer;
 }
 
-.close , .close-save, .library-close{
+.close , .close-save, .library-close, .library-clear{
     padding: 0.3rem;
     background-color: red;
     border: none;
@@ -70,7 +70,6 @@ cursor: pointer;
     right: 0%;
     font-weight: bold;
     font-size: 1.2rem;
-    border-top-left-radius: 1rem;
     cursor: pointer;
 }
 
@@ -82,7 +81,7 @@ cursor: pointer;
     margin: auto;
 
 }
-.library-button, .save-button, .genrate-button, .save-genrate{
+.library-button, .save-button, .genrate-button, .save-genrate, .library-genrate{
     font-size: 2rem;
     padding: 0.5rem;
     border: none;
@@ -118,15 +117,15 @@ input[type="range"]{
     width: 30%;
     height: 40%;
     background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+   display:flex;
+   flex-direction: column;
+   align-items: center;
   font-size: 1.7rem;
   font-family: Arial, Helvetica, sans-serif;
   transform: translateY(-20%);
   transition: transform 0.5s ease-in ;
   pointer-events: none;
+  position: relative;
 }
 .active-popup, .active-save-popup, .active-library-popup{
     opacity: 1;
@@ -140,14 +139,48 @@ input[type="range"]{
     transform: translateY(0%);
     opacity: 1;
 }
-.save-popup-text h2{
+.save-popup-text h2, .library-popup h2{
     font-size: 1.5rem;
     margin: 1rem 0rem;
+ 
 }
 .save-popup-text input{
     font-size: 1.5rem;
 }
-.library-color-divs{
+
+.library-color-div{
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+   margin-bottom: 2rem;
+}
+.library-small-colors{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+       
+
+}
+
+.library-popup-text{
+    width: 50%;
+    height: 60%;
+    overflow-y: scroll;
+}
+.smallDiv {
     width: 3rem;
-    height: 3rem;
+    height: 5rem;
+}
+.library-genrate{
+margin-top: 0rem;
+width: 5rem;
+    height: 5rem;
+    font-size: 1rem;
+}
+.library-clear{
+    left: 0%;
+    top: 5%;
+    background-color: rgb(46, 159, 46);
 }
