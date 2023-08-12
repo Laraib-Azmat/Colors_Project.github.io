@@ -383,7 +383,8 @@ libraryClear.addEventListener("click", () => {
     localStorage.clear(); 
 });
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", (e) => {
+    e.preventDefault();
     randomColor();
     updateLibrary();
 });
